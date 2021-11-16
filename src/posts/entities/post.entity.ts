@@ -1,14 +1,41 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
-export class Post {
+export interface IPost {
+  id: number;
+  title: string;
+  content: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
-    @PrimaryGeneratedColumn()
-    public id : number;
+@Entity({
+  name: 'post',
+})
+export class Post implements IPost {
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  public id: number;
 
-    @Column()
-    public title:string;
+  @ApiProperty()
+  @Column()
+  public title: string;
 
-    @Column()
-    public content: string;
+  @ApiProperty()
+  @Column()
+  public content: string;
+
+  @ApiPropertyOptional()
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createdAt?: string;
+
+  @ApiPropertyOptional()
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  updatedAt?: string;
 }
