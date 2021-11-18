@@ -1,5 +1,5 @@
 import * as Joi from '@hapi/joi';
-import { Module, OnApplicationBootstrap } from '@nestjs/common';
+import { Inject, Injectable, Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseModule } from './database/database.module';
@@ -20,10 +20,6 @@ import { SeedingService } from './seeding/seeding.service';
         PORT: Joi.number(),
       }),
     }),
-    // Typeorm config module
-    TypeOrmModule.forFeature([
-      Post
-    ]),
     // Component modules
     PostsModule,
     DatabaseModule,

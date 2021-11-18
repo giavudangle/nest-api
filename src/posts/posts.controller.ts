@@ -43,8 +43,6 @@ export class PostsController {
     return post;
   }
 
-
-
   @Get()
   @ApiOkResponse({
     type: PostEntity,

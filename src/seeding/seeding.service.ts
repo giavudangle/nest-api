@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { InjectEntityManager } from "@nestjs/typeorm";
 import { EntityManager } from "typeorm";
 import { posts } from "../../data-seeding";
 import { Post as PostEntity } from "../posts/entities/post.entity";
@@ -7,7 +8,7 @@ import { Seeding } from "./entities/seeding.entity";
 @Injectable()
 export class SeedingService {
     private readonly seedingId = 'initial-seeding';
-    constructor(private readonly entityManager : EntityManager){
+    constructor(@InjectEntityManager() private readonly entityManager : EntityManager){
 
     }
 
