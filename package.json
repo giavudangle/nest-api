@@ -18,7 +18,11 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "typeorm:cli": "ts-node ./node_modules/typeorm/cli.js --config src/config/typeorm-migration.config.ts",
+    "run-migrations": "npm run typeorm:cli -- migration:run",
+    "create-migration": "npm run typeorm:cli -- migration:create --name",
+    "generate-migration": "npm run typeorm:cli -- migration:generate --pretty --name"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",

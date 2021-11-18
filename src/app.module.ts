@@ -6,6 +6,7 @@ import { DatabaseModule } from './database/database.module';
 import { Post } from './posts/entities/post.entity';
 import { PostsModule } from './posts/posts.module';
 import { SeedingService } from './seeding/seeding.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SeedingService } from './seeding/seeding.service';
     // Component modules
     PostsModule,
     DatabaseModule,
+    UserModule,
   ],
   // Controller
   controllers: [],
