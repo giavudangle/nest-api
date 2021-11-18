@@ -1,8 +1,12 @@
 import * as Joi from '@hapi/joi';
-import { Module } from '@nestjs/common';
+import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { getConnectionOptions } from 'typeorm';
 import { DatabaseModule } from './database/database.module';
+import { Post } from './posts/entities/post.entity';
 import { PostsModule } from './posts/posts.module';
+import { SeedingService } from './seeding/seeding.service';
 
 @Module({
   imports: [
@@ -16,10 +20,21 @@ import { PostsModule } from './posts/posts.module';
         PORT: Joi.number(),
       }),
     }),
+    TypeOrmModule.forFeature([
+      Post
+    ]),
     PostsModule,
     DatabaseModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [SeedingService],
 })
-export class AppModule {}
+export class AppModule implements OnApplicationBootstrap {
+  constructor(private readonly seedingService : SeedingService){
+
+  }
+  async onApplicationBootstrap() : Promise<void> {
+    // call seeding services here (Nest LifeCycle)
+    //await this.seedingService.seed();
+  }
+}
