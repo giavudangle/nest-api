@@ -43,11 +43,7 @@ export class PostsController {
     return post;
   }
 
-  @Get('/seeding')
-  async seeding(){
-    const list = await this.postsService.seeding();
-    return list;
-  }
+
 
   @Get()
   @ApiOkResponse({

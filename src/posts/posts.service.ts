@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { posts } from '../../data-seeding';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { IPost, Post } from './entities/post.entity';
+import {  Post } from './entities/post.entity';
 
 @Injectable()
 export class PostsService {
@@ -19,22 +18,7 @@ export class PostsService {
     @InjectRepository(Post) private postsRepository: Repository<Post>,
   ) {}
 
-  async seeding() {
-    return posts.map(async (post : IPost) => {
-      return await this.postsRepository.create(post);
-    })
-    // return posts.map(async (post : IPost) => {
-    //   return await this.postsRepository
-    //     .findOne({id: post.id})
-    //     .then(async post => {
-    //       if(post){
-    //         return Promise.resolve(null);
-    //       }
-    //       return Promise.resolve(this.postsRepository.create(post))
-    //     })
-    //     .catch(e => Promise.reject(e))
-    // })
-  }
+
 
   async create(createPostDto: CreatePostDto): Promise<Post> {
     const newPost = this.postsRepository.create(createPostDto);

@@ -22,10 +22,10 @@ export class SeedingService {
                 ])
                 // persist in db that 'initial-seeding' is complete
                 await transcationalEntityManager.save(new Seeding(this.seedingId))
+                console.log('Seeding complete...')
             })
+        }else {
+            console.log('Already have seeding data...')
         }
-
-        
-        console.log("Seeding complete !!!")
     }
 }
