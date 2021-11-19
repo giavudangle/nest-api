@@ -1,8 +1,25 @@
-import { Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('user')
-export class User {
+
+interface IUser {
+    id : number,
+    email : string,
+    name : string,
+    password : string
+}
+
+@Entity('users')
+export class Users implements IUser{
 
     @PrimaryGeneratedColumn()
     id : number
+
+    @Column({unique:true})
+    public email:string
+
+    @Column()
+    public name:string
+
+    @Column()
+    public password: string
 }

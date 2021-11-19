@@ -1,12 +1,11 @@
 import * as Joi from '@hapi/joi';
-import { Inject, Injectable, Module, OnApplicationBootstrap } from '@nestjs/common';
+import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseModule } from './database/database.module';
-import { Post } from './posts/entities/post.entity';
 import { PostsModule } from './posts/posts.module';
 import { SeedingService } from './seeding/seeding.service';
-import { UserModule } from './user/user.module';
+import { UserModule } from './user/users.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 
 @Module({
   imports: [
@@ -25,6 +24,7 @@ import { UserModule } from './user/user.module';
     PostsModule,
     DatabaseModule,
     UserModule,
+    AuthenticationModule,
   ],
   // Controller
   controllers: [],

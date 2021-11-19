@@ -10,7 +10,7 @@ export interface IPost {
 }
 
 @Entity({
-  name: 'post',
+  name: 'posts',
 })
 export class Post implements IPost {
   @ApiProperty()

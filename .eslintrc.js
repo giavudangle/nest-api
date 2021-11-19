@@ -21,4 +21,5 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
   },
+  indent: [2, 2, { SwitchCase: 1}]
 };

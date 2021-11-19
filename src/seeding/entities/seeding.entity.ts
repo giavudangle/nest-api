@@ -1,7 +1,7 @@
 import { CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 
 
-@Entity()
+@Entity('seedings')
 export class Seeding {
     @PrimaryColumn()
     public id : string
