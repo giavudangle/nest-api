@@ -8,9 +8,11 @@ import TypeOrmConfig from '../config/typeorm.config';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory : async (configService : ConfigService) : 
-      Promise<TypeOrmModuleOptions> => TypeOrmConfig.getOrmConfig(configService)
-    })
+      useFactory: async (
+        configService: ConfigService,
+      ): Promise<TypeOrmModuleOptions> =>
+        TypeOrmConfig.getOrmConfig(configService),
+    }),
   ],
 })
 export class DatabaseModule {}

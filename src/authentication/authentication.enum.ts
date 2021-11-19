@@ -1,3 +1,4 @@
 export enum GUARD_TYPE {
-    LOCAL = 'local'
+  LOCAL = 'local',
+  JWT = 'jwt'
 }

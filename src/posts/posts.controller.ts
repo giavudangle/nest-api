@@ -10,6 +10,7 @@ import {
   NotFoundException,
   BadRequestException,
   ForbiddenException,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -24,6 +25,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Post as PostEntity } from './entities/post.entity';
+import { JwtAuthenticationGuard } from '../authentication/guards/jwt-authentication.guard';
 
 @ApiTags('Posts API')
 @Controller('posts')
@@ -31,6 +33,7 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
+  @UseGuards(JwtAuthenticationGuard)
   @ApiCreatedResponse({
     type: PostEntity,
   })

@@ -1,15 +1,14 @@
-import { CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
-
+import { CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 
 @Entity('seedings')
 export class Seeding {
-    @PrimaryColumn()
-    public id : string
+  @PrimaryColumn()
+  public id: string;
 
-    @CreateDateColumn()
-    creationDate : Date;
+  @CreateDateColumn()
+  creationDate: Date;
 
-    constructor(id? : string) {
-        this.id = id;
-    }
+  constructor(id?: string) {
+    this.id = id;
+  }
 }

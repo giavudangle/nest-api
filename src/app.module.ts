@@ -12,12 +12,17 @@ import { AuthenticationModule } from './authentication/authentication.module';
     // Database config module
     ConfigModule.forRoot({
       validationSchema: Joi.object({
+        // Postgresl Validation Schema
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.number().required(),
         POSTGRES_USER: Joi.string().required(),
         POSTGRES_PASSWORD: Joi.string().required(),
         POSTGRES_DB: Joi.string().required(),
         PORT: Joi.number(),
+        // ==================================
+        // JWT Validation Schema
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRATION_TIME: Joi.string().required(),
       }),
     }),
     // Component modules
@@ -32,11 +37,8 @@ import { AuthenticationModule } from './authentication/authentication.module';
   providers: [SeedingService],
 })
 export class AppModule implements OnApplicationBootstrap {
-  constructor(private readonly seedingService : SeedingService){
-
-  }
+  constructor(private readonly seedingService: SeedingService) {}
   async onApplicationBootstrap() {
     await this.seedingService.seed();
   }
-
 }
