@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Expose } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 interface IUser {
@@ -12,17 +13,21 @@ interface IUser {
 export class User implements IUser {
   @ApiProperty()
   @PrimaryGeneratedColumn()
-  id: number;
+  @Expose()
+  public id: number;
 
   @ApiProperty()
   @Column({ unique: true })
+  @Expose()
   public email: string;
 
   @ApiProperty()
   @Column()
+  @Expose()
   public name: string;
 
   @ApiProperty()
+  @Exclude()
   @Column()
   public password: string;
 }

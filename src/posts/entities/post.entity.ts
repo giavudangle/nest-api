@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Exclude, Transform } from 'class-transformer';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 export interface IPost {
@@ -7,6 +8,7 @@ export interface IPost {
   content: string;
   createdAt?: string;
   updatedAt?: string;
+  category? : string
 }
 
 @Entity({
@@ -38,4 +40,13 @@ export class Post implements IPost {
     default: () => 'CURRENT_TIMESTAMP',
   })
   updatedAt?: string;
+
+  @ApiPropertyOptional()
+  @Column({nullable:true})
+  @Transform(({value}) => {
+    if(value!==null){
+      return value;
+    }
+  })
+  category?:string
 }

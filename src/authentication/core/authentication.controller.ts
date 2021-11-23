@@ -1,12 +1,15 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   HttpCode,
   Post,
   Req,
   Res,
+  SerializeOptions,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -29,6 +32,10 @@ import IRequestWithUser from '../interfaces/request-with-user.interface';
 import { AuthenticationService } from './authentication.service';
 
 @ApiTags('Authentication API')
+@UseInterceptors(ClassSerializerInterceptor)
+@SerializeOptions({
+  strategy:'excludeAll'
+})
 @Controller('authentication')
 export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}

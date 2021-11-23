@@ -39,6 +39,6 @@ import { UserModule } from '../users/users.module';
 export class AppModule implements OnApplicationBootstrap {
   constructor(private readonly seedingService: SeedingService) {}
   async onApplicationBootstrap() {
-    await this.seedingService.seed();
+    //await this.seedingService.seed();
   }
 }

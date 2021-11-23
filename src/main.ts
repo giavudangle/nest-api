@@ -1,10 +1,10 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app/app.module';
-import { ExceptionsLoggerFilter } from './utils/exceptions-logger.filter';
+import { ExceptionsLoggerFilter } from './shared/filters/exceptions-logger.filter';
 
 async function bootstrap() {
   // Nest Factory
@@ -12,10 +12,13 @@ async function bootstrap() {
 
   const { httpAdapter } = app.get(HttpAdapterHost);
 
-  // Apply middlewares, pipes, guards
-  app.useGlobalPipes(new ValidationPipe({skipMissingProperties:true}));
+  // Apply middlewares, pipes, guards, interceptor
   app.use(cookieParser());
+  app.useGlobalPipes(new ValidationPipe({skipMissingProperties:true}));
   app.useGlobalFilters(new ExceptionsLoggerFilter(httpAdapter));
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(
+    app.get(Reflector)
+  ))
 
   // Swagger Configs
   const swaggerConfig = new DocumentBuilder()

@@ -11,6 +11,7 @@ import {
   BadRequestException,
   ForbiddenException,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -28,8 +29,12 @@ import {
 import { Post as PostEntity } from './entities/post.entity';
 import { JwtAuthenticationGuard } from '../authentication/guards/jwt-authentication.guard';
 import { PostNotFoundException } from './exceptions/post-not-found.exception';
+import { ExcludeNullInterceptor } from '../shared/interceptors/exclude-null.interceptor';
+import { LoggingInterceptor } from '../shared/interceptors/logging.interceptor';
 
 @ApiTags('Posts API')
+//@UseInterceptors(ExcludeNullInterceptor)
+@UseInterceptors(LoggingInterceptor)
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
