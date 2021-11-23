@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { Users } from '../user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import { AuthenticationService } from './authentication.service';
 import { RegisterDto } from './dto/register-authentication.dto';
 import { JwtAuthenticationGuard } from './guards/jwt-authentication.guard';
@@ -53,7 +53,7 @@ export class AuthenticationController {
 
   @UseGuards(JwtAuthenticationGuard)
   @Get()
-  authenticate(@Req() request : IRequestWithUser) : Users{
+  authenticate(@Req() request : IRequestWithUser) : User{
     const user = request.user;
     user.password = undefined;
     return user;

@@ -8,7 +8,7 @@ interface IUser {
 }
 
 @Entity('users')
-export class Users implements IUser {
+export class User implements IUser {
   @PrimaryGeneratedColumn()
   id: number;
 

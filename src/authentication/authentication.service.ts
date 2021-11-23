@@ -4,14 +4,14 @@ import { UserService } from '../user/users.service';
 import { RegisterDto } from './dto/register-authentication.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { Users } from '../user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import ITokenPayload from './interfaces/token-payload.interface';
 
 
 @Injectable()
 export class AuthenticationService {
   constructor(
-    private readonly usersService: UserService,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
@@ -21,10 +21,10 @@ export class AuthenticationService {
    * @param  {RegisterDto} registrationData
    * @returns Promise
    */
-  public async register(registrationData: RegisterDto) : Promise<Users> {
+  public async register(registrationData: RegisterDto) : Promise<User> {
     const hashedPassword = await bcrypt.hash(registrationData.password, 10);
     try {
-      const createdUser = await this.usersService.create({
+      const createdUser = await this.userService.create({
         ...registrationData,
         password: hashedPassword,
       });
@@ -49,9 +49,9 @@ export class AuthenticationService {
    * @param  {string} hashedPassword
    * @returns Promise
    */
-  public async getAuthenticateUser(email: string, hashedPassword: string): Promise<Users> {
+  public async getAuthenticateUser(email: string, hashedPassword: string): Promise<User> {
     try {
-      const user = await this.usersService.getByEmail(email);
+      const user = await this.userService.getByEmail(email);
       const isPasswordMatching = await bcrypt.compare(
         hashedPassword,
         user.password,
