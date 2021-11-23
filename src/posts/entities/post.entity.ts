@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Transform } from 'class-transformer';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Category } from '../../categories/entities/category.entity';
 import { User } from '../../users/entities/user.entity';
 
 export interface IPost {
@@ -15,7 +16,7 @@ export interface IPost {
 @Entity({
   name: 'posts',
 })
-export class Post implements IPost {
+export class Post {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   public id: number;
@@ -42,16 +43,22 @@ export class Post implements IPost {
   })
   updatedAt?: string;
 
-  @ApiPropertyOptional()
-  @Column({nullable:true})
+  @ManyToOne(() => User,(author:User) => author.posts)
+  public author : User;
+
+  @ApiProperty({
+    type: () => Category
+  })
+  @ManyToMany(() => Category,(category: Category) => category.posts)
+  @JoinTable({
+    name:'posts_to_categories'
+  })
   @Transform(({value}) => {
     if(value!==null){
       return value;
     }
   })
-  category?:string
+  public categories : Category[];
 
 
-  @ManyToOne(() => User,(author:User) => author.posts)
-  public author : User;
 }

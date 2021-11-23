@@ -2,6 +2,7 @@ import * as Joi from '@hapi/joi';
 import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthenticationModule } from '../authentication/core/authentication.module';
+import { CategoriesModule } from '../categories/core/categories.module';
 import { DatabaseModule } from '../database/database.module';
 import { PostsModule } from '../posts/core/posts.module';
 import { SeedingService } from '../seedings/seeding.service';
@@ -30,6 +31,7 @@ import { UserModule } from '../users/core/users.module';
     DatabaseModule,
     UserModule,
     AuthenticationModule,
+    CategoriesModule
   ],
   // Controller
   controllers: [],

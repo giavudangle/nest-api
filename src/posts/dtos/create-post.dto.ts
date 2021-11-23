@@ -1,10 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsAlphanumeric,
+  IsArray,
+  IsInstance,
   IsNotEmpty,
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { Category } from '../../categories/entities/category.entity';
 
 export class CreatePostDto {
   @ApiProperty()
@@ -18,4 +21,11 @@ export class CreatePostDto {
   @IsNotEmpty()
   @MaxLength(1000)
   content: string;
+
+  @IsArray()
+  @ApiProperty({
+    type: () => Category
+  })
+  categories : Category[]
+  
 }
