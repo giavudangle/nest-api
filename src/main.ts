@@ -1,8 +1,9 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
-import { AppModule } from './app.module';
+import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   // Nest Factory
@@ -20,6 +21,7 @@ async function bootstrap() {
     .setTitle('Nest-TypeORM Api Documentation')
     .setDescription('Simple api built with nest-typeorm-postgresql')
     .setVersion('1.0.0')
+    .setBasePath('/api')
     .addCookieAuth('Authentication')
     .build();
 
@@ -27,6 +29,6 @@ async function bootstrap() {
   SwaggerModule.setup('/', app, swaggerDocument);
 
   // Start App
-  await app.listen(3000);
+  await app.listen(process.env.SERVER_PORT);
 }
 bootstrap();

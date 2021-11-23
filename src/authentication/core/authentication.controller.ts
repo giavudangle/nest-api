@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiBody, ApiCookieAuth, ApiCreatedResponse, ApiHeader, ApiOkResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { User } from '../../user/entities/user.entity';
-import { LoginDto } from '../dto/login-authentication.dto';
-import { RegisterDto } from '../dto/register-authentication.dto';
+import { User } from '../../users/entities/user.entity';
+import { LoginDto } from '../dtos/login-authentication.dto';
+import { RegisterDto } from '../dtos/register-authentication.dto';
 import { JwtAuthenticationGuard } from '../guards/jwt-authentication.guard';
 import { LocalAuthenticationGuard } from '../guards/local-authentication.guard';
 import IRequestWithUser from '../interfaces/request-with-user.interface';
