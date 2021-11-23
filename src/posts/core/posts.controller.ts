@@ -12,10 +12,11 @@ import {
   ForbiddenException,
   UseGuards,
   UseInterceptors,
+  Req,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { CreatePostDto } from '../dtos/create-post.dto';
+import { UpdatePostDto } from '../dtos/update-post.dto';
 import {
   ApiBadRequestResponse,
   ApiCookieAuth,
@@ -26,11 +27,12 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Post as PostEntity } from './entities/post.entity';
-import { JwtAuthenticationGuard } from '../authentication/guards/jwt-authentication.guard';
-import { PostNotFoundException } from './exceptions/post-not-found.exception';
-import { ExcludeNullInterceptor } from '../shared/interceptors/exclude-null.interceptor';
-import { LoggingInterceptor } from '../shared/interceptors/logging.interceptor';
+import { Post as PostEntity } from '../entities/post.entity';
+import { LoggingInterceptor } from '../../shared/interceptors/logging.interceptor';
+import { JwtAuthenticationGuard } from '../../authentication/guards/jwt-authentication.guard';
+import IRequestWithUser from '../../authentication/interfaces/request-with-user.interface';
+import { PostNotFoundException } from '../exceptions/post-not-found.exception';
+
 
 @ApiTags('Posts API')
 //@UseInterceptors(ExcludeNullInterceptor)
@@ -46,8 +48,8 @@ export class PostsController {
   })
   @ApiCookieAuth()
   @ApiBadRequestResponse()
-  async create(@Body() createPostDto: CreatePostDto): Promise<PostEntity> {
-    const post = await this.postsService.create(createPostDto);
+  async create(@Body() createPostDto: CreatePostDto,@Req() req : IRequestWithUser): Promise<PostEntity> {
+    const post = await this.postsService.create(createPostDto,req.user)
     if (!post) {
       throw new BadRequestException();
     }

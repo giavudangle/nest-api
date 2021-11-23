@@ -25,7 +25,6 @@ async function bootstrap() {
     .setTitle('Nest-TypeORM Api Documentation')
     .setDescription('Simple api built with nest-typeorm-postgresql')
     .setVersion('1.0.0')
-    .setBasePath('/api')
     .addCookieAuth('Authentication')
     .build();
 

@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Transform } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
 
 export interface IPost {
   id: number;
@@ -49,4 +50,8 @@ export class Post implements IPost {
     }
   })
   category?:string
+
+
+  @ManyToOne(() => User,(author:User) => author.posts)
+  public author : User;
 }

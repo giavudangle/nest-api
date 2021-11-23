@@ -2,10 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UserService } from '../../users/users.service';
 import { RegisterDto } from '../dtos/register-authentication.dto';
 import { User } from '../../users/entities/user.entity';
 import ITokenPayload from '../interfaces/token-payload.interface';
+import { UserService } from '../../users/core/users.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -26,7 +26,8 @@ export class AuthenticationService {
         ...registrationData,
         password: hashedPassword,
       });
-      createdUser.password = undefined;
+      console.log(createdUser)
+      //createdUser.password = undefined;
       return createdUser;
     } catch (error) {
       if (error?.code === POSTGRE_ERROR_CODE.UniqueViolation) {

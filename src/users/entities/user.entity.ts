@@ -1,6 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Post } from '../../posts/entities/post.entity';
+import { Address } from './address.entity';
 
 interface IUser {
   id: number;
@@ -13,21 +15,33 @@ interface IUser {
 export class User implements IUser {
   @ApiProperty()
   @PrimaryGeneratedColumn()
-  @Expose()
   public id: number;
 
   @ApiProperty()
   @Column({ unique: true })
-  @Expose()
   public email: string;
 
   @ApiProperty()
   @Column()
-  @Expose()
   public name: string;
 
   @ApiProperty()
   @Exclude()
   @Column()
   public password: string;
+
+  @ApiProperty({type: () => Address})
+  @JoinColumn({
+    name: 'address_id'
+  })
+  @OneToOne(() => Address, {
+    eager: true,
+    cascade: true
+  })
+  public address: Address;
+
+
+  @ApiProperty({type:() => Post})
+  @OneToMany(() => Post,(post:Post) => post.author)
+  public posts : Post[];
 }

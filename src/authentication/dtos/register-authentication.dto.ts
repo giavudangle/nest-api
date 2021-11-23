@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Address } from '../../users/entities/address.entity';
 
 export class RegisterDto {
   @ApiPropertyOptional()
@@ -7,4 +8,7 @@ export class RegisterDto {
   email: string;
   @ApiProperty()
   password: string;
+
+  @ApiProperty({type:() => Address})
+  address : Address
 }

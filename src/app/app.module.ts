@@ -3,9 +3,9 @@ import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthenticationModule } from '../authentication/core/authentication.module';
 import { DatabaseModule } from '../database/database.module';
-import { PostsModule } from '../posts/posts.module';
+import { PostsModule } from '../posts/core/posts.module';
 import { SeedingService } from '../seedings/seeding.service';
-import { UserModule } from '../users/users.module';
+import { UserModule } from '../users/core/users.module';
 
 @Module({
   imports: [
