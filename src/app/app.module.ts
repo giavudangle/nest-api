@@ -7,7 +7,6 @@ import { PostsModule } from '../posts/posts.module';
 import { SeedingService } from '../seedings/seeding.service';
 import { UserModule } from '../users/users.module';
 
-
 @Module({
   imports: [
     // Database config module

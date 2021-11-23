@@ -5,7 +5,6 @@ import { User } from '../../users/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { AuthenticationService } from '../core/authentication.service';
 
-
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authenticationService: AuthenticationService) {

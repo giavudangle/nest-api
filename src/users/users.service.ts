@@ -7,7 +7,6 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
@@ -20,12 +19,15 @@ export class UserService {
     return null;
   }
 
-  async getById(id: number) : Promise<User> {
-    const user = await this.userRepository.findOne({id})
-    if(user){
+  async getById(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({ id });
+    if (user) {
       return user;
     }
-    throw new HttpException('User with this id does not exist', HttpStatus.NOT_FOUND);
+    throw new HttpException(
+      'User with this id does not exist',
+      HttpStatus.NOT_FOUND,
+    );
   }
 
   async create(userData: CreateUserDto): Promise<User> {

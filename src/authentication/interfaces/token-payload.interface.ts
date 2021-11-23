@@ -1,5 +1,5 @@
 interface ITokenPayload {
-    userId: number
+  userId: number;
 }
 
-export default ITokenPayload
+export default ITokenPayload;

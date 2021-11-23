@@ -27,6 +27,7 @@ import {
 } from '@nestjs/swagger';
 import { Post as PostEntity } from './entities/post.entity';
 import { JwtAuthenticationGuard } from '../authentication/guards/jwt-authentication.guard';
+import { PostNotFoundException } from './exceptions/post-not-found.exception';
 
 @ApiTags('Posts API')
 @Controller('posts')
@@ -71,7 +72,7 @@ export class PostsController {
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const post = await this.postsService.findOne(id);
     if (!post) {
-      throw new NotFoundException();
+      throw new PostNotFoundException(id);
     }
     return post;
   }

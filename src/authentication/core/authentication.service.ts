@@ -7,7 +7,6 @@ import { RegisterDto } from '../dtos/register-authentication.dto';
 import { User } from '../../users/entities/user.entity';
 import ITokenPayload from '../interfaces/token-payload.interface';
 
-
 @Injectable()
 export class AuthenticationService {
   constructor(
@@ -16,12 +15,11 @@ export class AuthenticationService {
     private readonly configService: ConfigService,
   ) {}
 
-  
   /**
    * @param  {RegisterDto} registrationData
    * @returns Promise
    */
-  public async register(registrationData: RegisterDto) : Promise<User> {
+  public async register(registrationData: RegisterDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(registrationData.password, 10);
     try {
       const createdUser = await this.userService.create({
@@ -49,7 +47,10 @@ export class AuthenticationService {
    * @param  {string} hashedPassword
    * @returns Promise
    */
-  public async getAuthenticateUser(email: string, hashedPassword: string): Promise<User> {
+  public async getAuthenticateUser(
+    email: string,
+    hashedPassword: string,
+  ): Promise<User> {
     try {
       const user = await this.userService.getByEmail(email);
       const isPasswordMatching = await bcrypt.compare(
@@ -76,15 +77,15 @@ export class AuthenticationService {
    * @param  {number} userId
    * @returns string
    */
-  public getCookieWithJwtToken(userId : number) : string {
-    const payload : ITokenPayload = {userId};
+  public getCookieWithJwtToken(userId: number): string {
+    const payload: ITokenPayload = { userId };
     const token = this.jwtService.sign(payload);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+      'JWT_EXPIRATION_TIME',
+    )}`;
   }
 
-  public getCookieForLogout(){
+  public getCookieForLogout() {
     return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
   }
-
-
 }
