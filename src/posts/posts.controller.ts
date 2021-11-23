@@ -17,6 +17,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import {
   ApiBadRequestResponse,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiFoundResponse,
@@ -32,11 +33,12 @@ import { JwtAuthenticationGuard } from '../authentication/guards/jwt-authenticat
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Post()
   @UseGuards(JwtAuthenticationGuard)
+  @Post()
   @ApiCreatedResponse({
     type: PostEntity,
   })
+  @ApiCookieAuth()
   @ApiBadRequestResponse()
   async create(@Body() createPostDto: CreatePostDto): Promise<PostEntity> {
     const post = await this.postsService.create(createPostDto);
@@ -46,6 +48,7 @@ export class PostsController {
     return post;
   }
 
+  @UseGuards(JwtAuthenticationGuard)
   @Get()
   @ApiOkResponse({
     type: PostEntity,

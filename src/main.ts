@@ -8,14 +8,19 @@ async function bootstrap() {
   // Nest Factory
   const app = await NestFactory.create(AppModule);
 
+  // Apply Global Guards
+  //....
+
   // Apply middlewares,pipes,guards
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser())
+
   // Swagger Configs
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Nest-TypeORM Api Documentation')
     .setDescription('Simple api built with nest-typeorm-postgresql')
     .setVersion('1.0.0')
+    .addCookieAuth('Authentication')
     .build();
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);

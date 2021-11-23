@@ -1,11 +1,11 @@
 import * as Joi from '@hapi/joi';
 import { Module, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AuthenticationModule } from './authentication/core/authentication.module';
 import { DatabaseModule } from './database/database.module';
 import { PostsModule } from './posts/posts.module';
 import { SeedingService } from './seeding/seeding.service';
 import { UserModule } from './user/users.module';
-import { AuthenticationModule } from './authentication/authentication.module';
 
 @Module({
   imports: [
