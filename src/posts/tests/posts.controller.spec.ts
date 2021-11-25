@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PostsController } from './posts.controller';
-import { PostsService } from './posts.service';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Post } from '../entities/post.entity';
+import { PostsController } from '../core/posts.controller';
+import { PostsService } from '../core/posts.service';
 
 describe('PostsController', () => {
   let controller: PostsController;
@@ -8,7 +10,13 @@ describe('PostsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PostsController],
-      providers: [PostsService],
+      providers: [
+        PostsService,
+        {
+          provide:getRepositoryToken(Post),
+          useValue: {}
+        }
+      ],
     }).compile();
 
     controller = module.get<PostsController>(PostsController);
