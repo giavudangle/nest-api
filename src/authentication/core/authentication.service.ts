@@ -20,14 +20,15 @@ export class AuthenticationService {
    * @returns Promise
    */
   public async register(registrationData: RegisterDto): Promise<User> {
+    if(registrationData.email === undefined || registrationData.password === undefined){
+      throw new HttpException('Please given email and password',HttpStatus.BAD_REQUEST)
+    }
     const hashedPassword = await bcrypt.hash(registrationData.password, 10);
     try {
       const createdUser = await this.userService.create({
         ...registrationData,
         password: hashedPassword,
       });
-      console.log(createdUser)
-      //createdUser.password = undefined;
       return createdUser;
     } catch (error) {
       if (error?.code === POSTGRE_ERROR_CODE.UniqueViolation) {
@@ -38,7 +39,7 @@ export class AuthenticationService {
       } else {
         throw new HttpException(
           'Something went wrong',
-          HttpStatus.INTERNAL_SERVER_ERROR,
+          HttpStatus.BAD_REQUEST,
         );
       }
     }
