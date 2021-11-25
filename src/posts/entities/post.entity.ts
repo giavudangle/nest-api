@@ -10,7 +10,8 @@ export interface IPost {
   content: string;
   createdAt?: string;
   updatedAt?: string;
-  category? : string
+  category? : string,
+  imageUrl : string
 }
 
 @Entity({
@@ -28,6 +29,12 @@ export class Post {
   @ApiProperty()
   @Column()
   public content: string;
+
+  @ApiProperty()
+  @Column({
+    name:'image_url'
+  })
+  public imageUrl : string
 
   @ApiPropertyOptional()
   @Column({

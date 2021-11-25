@@ -32,10 +32,11 @@ import { LoggingInterceptor } from '../../shared/interceptors/logging.intercepto
 import { JwtAuthenticationGuard } from '../../authentication/guards/jwt-authentication.guard';
 import IRequestWithUser from '../../authentication/interfaces/request-with-user.interface';
 import { PostNotFoundException } from '../exceptions/post-not-found.exception';
+import { ExcludeNullInterceptor } from '../../shared/interceptors/exclude-null.interceptor';
 
 
 @ApiTags('Posts API')
-//@UseInterceptors(ExcludeNullInterceptor)
+@UseInterceptors(ExcludeNullInterceptor)
 @UseInterceptors(LoggingInterceptor)
 @Controller('posts')
 export class PostsController {

@@ -17,7 +17,7 @@ export default class TypeOrmConfig {
       database: configService.get('POSTGRES_DB'),
       //autoLoadEntities:true,
       entities: [`${__dirname}/../**/*.entity.{ts,js}`],
-      synchronize: true, // based on enviroment (must false in production)
+      synchronize: false, // based on enviroment (must false in production)
       logging: true,
       migrations: [getMigrationDirectory(configService)],
       cli: {
