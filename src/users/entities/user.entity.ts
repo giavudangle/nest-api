@@ -38,10 +38,10 @@ export class User implements IUser {
     eager: true,
     cascade: true
   })
-  public address: Address;
+  public address?: Address;
 
 
   @ApiProperty({type:() => Post})
   @OneToMany(() => Post,(post:Post) => post.author)
-  public posts : Post[];
+  public posts? : Post[];
 }

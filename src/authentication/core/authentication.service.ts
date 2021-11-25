@@ -58,6 +58,7 @@ export class AuthenticationService {
         hashedPassword,
         user.password,
       );
+      
 
       if (!isPasswordMatching) {
         throw new HttpException(
@@ -65,7 +66,7 @@ export class AuthenticationService {
           HttpStatus.BAD_REQUEST,
         );
       }
-      user.password = undefined;
+      //user.password = undefined;
       return user;
     } catch (error) {
       throw new HttpException(
