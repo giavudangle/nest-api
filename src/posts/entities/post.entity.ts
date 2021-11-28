@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Transform } from 'class-transformer';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
 import { User } from '../../users/entities/user.entity';
 
@@ -32,23 +32,22 @@ export class Post {
 
   @ApiProperty()
   @Column({
-    name:'image_url'
+    name:'image_url',
+    nullable:true
   })
   public imageUrl : string
 
-  @ApiPropertyOptional()
-  @Column({
+  @CreateDateColumn({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP(6)',
   })
-  createdAt?: string;
+  createdAt: Date;
 
-  @ApiPropertyOptional()
-  @Column({
+  @UpdateDateColumn({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP(6)',
   })
-  updatedAt?: string;
+  updatedAt: Date;
 
   @ManyToOne(() => User,(author:User) => author.posts)
   public author : User;
@@ -58,7 +57,14 @@ export class Post {
   })
   @ManyToMany(() => Category,(category: Category) => category.posts)
   @JoinTable({
-    name:'posts_to_categories'
+    name:'posts_to_categories',
+    joinColumn:{
+      name:'post_id',
+      referencedColumnName:'id'
+    },
+    inverseJoinColumn:{
+      name:'category_id'
+    }
   })
   @Transform(({value}) => {
     if(value!==null){

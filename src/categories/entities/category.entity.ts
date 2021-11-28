@@ -4,11 +4,23 @@ import { Post } from "../../posts/entities/post.entity";
 @Entity('categories')
 export class Category {
     @PrimaryGeneratedColumn()
-    public id: number
+    public id?: number
 
     @ApiProperty()
-    @Column()
+    @Column({
+        //unique:true,
+        nullable:true
+    })
     public name: string;
+
+    @ApiProperty()
+    @Column({
+        //unique:true,
+        nullable:true
+    })
+    public code : string
+
+    
     @ManyToMany(() => Post, (post: Post) => post.categories)
     public posts: Post[]
 }

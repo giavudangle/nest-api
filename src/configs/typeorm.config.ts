@@ -4,7 +4,8 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 function getMigrationDirectory(configService: ConfigService) {
   const directory =
     configService.get('NODE_ENV') !== 'dev' ? 'src' : `${__dirname}`;
-  return `${directory}/migrations/**/*{.ts,.js}`;
+  console.log(`${directory}/../migrations/**/*{.ts,.js}`)
+  return `${directory}/../migrations/**/*{.ts,.js}`;
 }
 export default class TypeOrmConfig {
   static getOrmConfig(configService: ConfigService): TypeOrmModuleOptions {
@@ -17,7 +18,7 @@ export default class TypeOrmConfig {
       database: configService.get('POSTGRES_DB'),
       //autoLoadEntities:true,
       entities: [`${__dirname}/../**/*.entity.{ts,js}`],
-      synchronize: false, // based on enviroment (must false in production)
+      synchronize: true, // based on enviroment (must false in production)
       logging: true,
       migrations: [getMigrationDirectory(configService)],
       cli: {

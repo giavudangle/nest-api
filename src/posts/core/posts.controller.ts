@@ -13,12 +13,16 @@ import {
   UseGuards,
   UseInterceptors,
   Req,
+  UploadedFile,
+  HttpCode,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { UpdatePostDto } from '../dtos/update-post.dto';
 import {
   ApiBadRequestResponse,
+  ApiBody,
+  ApiConsumes,
   ApiCookieAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -33,24 +37,44 @@ import { JwtAuthenticationGuard } from '../../authentication/guards/jwt-authenti
 import IRequestWithUser from '../../authentication/interfaces/request-with-user.interface';
 import { PostNotFoundException } from '../exceptions/post-not-found.exception';
 import { ExcludeNullInterceptor } from '../../shared/interceptors/exclude-null.interceptor';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { Path } from '../../shared/enums/path.enum';
+import { editFileName, imageFileFilter } from '../../shared/utils/file-uploading.utils';
+import { CategoriesService } from '../../categories/core/categories.service';
 
 
 @ApiTags('Posts API')
-@UseInterceptors(ExcludeNullInterceptor)
+//@UseInterceptors(ExcludeNullInterceptor)
 @UseInterceptors(LoggingInterceptor)
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(
+    private readonly postsService: PostsService,
+    ) {}
 
   @UseGuards(JwtAuthenticationGuard)
   @Post()
   @ApiCreatedResponse({
     type: PostEntity,
   })
+  @HttpCode(201)
   @ApiCookieAuth()
+  @ApiConsumes('multipart/form-data')
   @ApiBadRequestResponse()
-  async create(@Body() createPostDto: CreatePostDto,@Req() req : IRequestWithUser): Promise<PostEntity> {
-    const post = await this.postsService.create(createPostDto,req.user)
+  @UseInterceptors(
+    FileInterceptor('image',{
+      storage:diskStorage({
+        destination:'./public/assets/images',
+        filename:editFileName,
+      }),
+      fileFilter:imageFileFilter
+    })
+  )
+  async create(@UploadedFile() file : Express.Multer.File, @Body() createPostDto: CreatePostDto,@Req() req : IRequestWithUser): Promise<PostEntity> {
+    const filePath = file.path.toString();
+
+    const post = await this.postsService.create(createPostDto,req.user,filePath)
     if (!post) {
       throw new BadRequestException();
     }

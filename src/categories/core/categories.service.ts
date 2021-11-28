@@ -10,8 +10,9 @@ export class CategoriesService {
 
   constructor(@InjectRepository(Category) private readonly categoriesRepository : Repository<Category>){}
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+  async create(createCategoryDto: CreateCategoryDto) {
+    const category = this.categoriesRepository.create(createCategoryDto)
+    return await this.categoriesRepository.save(category)
   }
 
   async findAll() : Promise<Category[]> {

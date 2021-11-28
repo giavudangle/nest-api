@@ -1,4 +1,6 @@
+import { UploadedFile } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsAlphanumeric,
   IsArray,
@@ -11,7 +13,6 @@ import { Category } from '../../categories/entities/category.entity';
 
 export class CreatePostDto {
   @ApiProperty()
-  @IsAlphanumeric()
   @MaxLength(50)
   @MinLength(5)
   @IsNotEmpty()
@@ -22,9 +23,16 @@ export class CreatePostDto {
   @MaxLength(1000)
   content: string;
 
-  @IsArray()
   @ApiProperty({
-    type: () => Category
+    type:'string',
+    format:'binary'
+  })
+  image : any
+
+  @IsNotEmpty()
+  @ApiProperty({
+    type: () => Category,
+    //isArray:true
   })
   categories : Category[]
   
