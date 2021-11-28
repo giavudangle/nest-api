@@ -20,16 +20,16 @@ describe('AuthenticationController', () => {
         UserService,
         {
           provide: ConfigService,
-          useValue: mockedConfigService
+          useValue: mockedConfigService,
         },
         {
           provide: JwtService,
-          useValue: mockedJwtService
+          useValue: mockedJwtService,
         },
         {
           provide: getRepositoryToken(User),
-          useValue:{}
-        }
+          useValue: {},
+        },
       ],
     }).compile();
 

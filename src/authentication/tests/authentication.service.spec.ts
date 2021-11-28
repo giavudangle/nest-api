@@ -13,35 +13,34 @@ describe('AuthenticationService', () => {
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      providers:[
+      providers: [
         UserService,
         AuthenticationService,
         {
           provide: ConfigService,
-          useValue:mockedConfigService
+          useValue: mockedConfigService,
         },
         {
           provide: JwtService,
-          useValue: mockedJwtService
+          useValue: mockedJwtService,
         },
         {
-          provide:getRepositoryToken(User),
-          useValue:{}
-        }
-      ]
-    }).compile()
-    authenticationService = await module.get<AuthenticationService>(AuthenticationService);
-  })
+          provide: getRepositoryToken(User),
+          useValue: {},
+        },
+      ],
+    }).compile();
+    authenticationService = await module.get<AuthenticationService>(
+      AuthenticationService,
+    );
+  });
 
-
-
-  describe('When creating a cookie',() => {
-    it('should be return a string',() => {
+  describe('When creating a cookie', () => {
+    it('should be return a string', () => {
       const userId = 1;
       expect(
-        typeof authenticationService.getCookieWithJwtToken(userId)
-      ).toEqual('string')
-    })
-  })
-
+        typeof authenticationService.getCookieWithJwtToken(userId),
+      ).toEqual('string');
+    });
+  });
 });

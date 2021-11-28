@@ -1,6 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Post } from '../../posts/entities/post.entity';
 import { Address } from './address.entity';
 
@@ -30,18 +37,17 @@ export class User implements IUser {
   @Column()
   public password: string;
 
-  @ApiProperty({type: () => Address})
+  @ApiProperty({ type: () => Address })
   @JoinColumn({
-    name: 'address_id'
+    name: 'address_id',
   })
   @OneToOne(() => Address, {
     eager: true,
-    cascade: true
+    cascade: true,
   })
   public address?: Address;
 
-
-  @ApiProperty({type:() => Post})
-  @OneToMany(() => Post,(post:Post) => post.author)
-  public posts? : Post[];
+  @ApiProperty({ type: () => Post })
+  @OneToMany(() => Post, (post: Post) => post.author)
+  public posts?: Post[];
 }

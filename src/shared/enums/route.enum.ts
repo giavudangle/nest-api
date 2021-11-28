@@ -1,5 +1,5 @@
 export enum Route {
-    AUTH = '/authentication',
-    POST = '/posts',
-    CATEGORY = '/categories',
+  AUTH = '/authentication',
+  POST = '/posts',
+  CATEGORY = '/categories',
 }

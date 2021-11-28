@@ -20,8 +20,14 @@ export class AuthenticationService {
    * @returns Promise
    */
   public async register(registrationData: RegisterDto): Promise<User> {
-    if(registrationData.email === undefined || registrationData.password === undefined){
-      throw new HttpException('Please given email and password',HttpStatus.BAD_REQUEST)
+    if (
+      registrationData.email === undefined ||
+      registrationData.password === undefined
+    ) {
+      throw new HttpException(
+        'Please given email and password',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const hashedPassword = await bcrypt.hash(registrationData.password, 10);
     try {
@@ -37,10 +43,7 @@ export class AuthenticationService {
           HttpStatus.BAD_REQUEST,
         );
       } else {
-        throw new HttpException(
-          'Something went wrong',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
       }
     }
   }
@@ -59,7 +62,6 @@ export class AuthenticationService {
         hashedPassword,
         user.password,
       );
-      
 
       if (!isPasswordMatching) {
         throw new HttpException(

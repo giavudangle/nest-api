@@ -24,16 +24,15 @@ export class CreatePostDto {
   content: string;
 
   @ApiProperty({
-    type:'string',
-    format:'binary'
+    type: 'string',
+    format: 'binary',
   })
-  image : any
+  image: any;
 
   @IsNotEmpty()
   @ApiProperty({
     type: () => Category,
     //isArray:true
   })
-  categories : Category[]
-  
+  categories: Category[];
 }

@@ -12,8 +12,8 @@ describe('CategoriesService', () => {
         CategoriesService,
         {
           provide: getRepositoryToken(Category),
-          useValue:{}
-        }
+          useValue: {},
+        },
       ],
     }).compile();
 

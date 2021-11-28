@@ -40,18 +40,18 @@ import { ExcludeNullInterceptor } from '../../shared/interceptors/exclude-null.i
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Path } from '../../shared/enums/path.enum';
-import { editFileName, imageFileFilter } from '../../shared/utils/file-uploading.utils';
+import {
+  editFileName,
+  imageFileFilter,
+} from '../../shared/utils/file-uploading.utils';
 import { CategoriesService } from '../../categories/core/categories.service';
-
 
 @ApiTags('Posts API')
 //@UseInterceptors(ExcludeNullInterceptor)
 @UseInterceptors(LoggingInterceptor)
 @Controller('posts')
 export class PostsController {
-  constructor(
-    private readonly postsService: PostsService,
-    ) {}
+  constructor(private readonly postsService: PostsService) {}
 
   @UseGuards(JwtAuthenticationGuard)
   @Post()
@@ -63,18 +63,26 @@ export class PostsController {
   @ApiConsumes('multipart/form-data')
   @ApiBadRequestResponse()
   @UseInterceptors(
-    FileInterceptor('image',{
-      storage:diskStorage({
-        destination:'./public/assets/images',
-        filename:editFileName,
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './public/assets/images',
+        filename: editFileName,
       }),
-      fileFilter:imageFileFilter
-    })
+      fileFilter: imageFileFilter,
+    }),
   )
-  async create(@UploadedFile() file : Express.Multer.File, @Body() createPostDto: CreatePostDto,@Req() req : IRequestWithUser): Promise<PostEntity> {
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createPostDto: CreatePostDto,
+    @Req() req: IRequestWithUser,
+  ): Promise<PostEntity> {
     const filePath = file.path.toString();
 
-    const post = await this.postsService.create(createPostDto,req.user,filePath)
+    const post = await this.postsService.create(
+      createPostDto,
+      req.user,
+      filePath,
+    );
     if (!post) {
       throw new BadRequestException();
     }

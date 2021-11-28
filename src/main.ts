@@ -16,11 +16,9 @@ async function bootstrap() {
 
   // Apply middlewares, pipes, guards, interceptor
   app.use(cookieParser());
-  app.useGlobalPipes(new ValidationPipe({skipMissingProperties:true}));
+  app.useGlobalPipes(new ValidationPipe({ skipMissingProperties: true }));
   app.useGlobalFilters(new ExceptionsLoggerFilter(httpAdapter));
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(
-    app.get(Reflector)
-  ))
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   // Swagger Configs
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Nest-TypeORM Api Documentation')

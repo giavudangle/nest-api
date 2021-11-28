@@ -7,29 +7,36 @@ import { Category } from '../entities/category.entity';
 
 @Injectable()
 export class CategoriesService {
-
-  constructor(@InjectRepository(Category) private readonly categoriesRepository : Repository<Category>){}
+  constructor(
+    @InjectRepository(Category)
+    private readonly categoriesRepository: Repository<Category>,
+  ) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
-    const category = this.categoriesRepository.create(createCategoryDto)
-    return await this.categoriesRepository.save(category)
+    const category = this.categoriesRepository.create(createCategoryDto);
+    return await this.categoriesRepository.save(category);
   }
 
-  async findAll() : Promise<Category[]> {
+  async findAll(): Promise<Category[]> {
     return await this.categoriesRepository.find({
-      relations:['posts']
-    })
+      relations: ['posts'],
+    });
   }
 
-  async findOne(id: number) : Promise<Category> {
-    return await this.categoriesRepository.findOne(id,{relations:['posts']})
+  async findOne(id: number): Promise<Category> {
+    return await this.categoriesRepository.findOne(id, {
+      relations: ['posts'],
+    });
   }
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto) :Promise<Category> {
-    await this.categoriesRepository.update(id,updateCategoryDto)
-    return await this.categoriesRepository.findOne(id,{
-      relations:['posts']
-    })
+  async update(
+    id: number,
+    updateCategoryDto: UpdateCategoryDto,
+  ): Promise<Category> {
+    await this.categoriesRepository.update(id, updateCategoryDto);
+    return await this.categoriesRepository.findOne(id, {
+      relations: ['posts'],
+    });
   }
 
   remove(id: number) {

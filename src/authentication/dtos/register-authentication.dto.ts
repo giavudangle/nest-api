@@ -9,6 +9,6 @@ export class RegisterDto {
   @ApiProperty()
   password: string;
 
-  @ApiProperty({type:() => Address})
-  address : Address
+  @ApiProperty({ type: () => Address })
+  address: Address;
 }

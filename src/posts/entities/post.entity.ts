@@ -1,6 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Exclude, Transform } from 'class-transformer';
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
 import { User } from '../../users/entities/user.entity';
 
@@ -10,8 +19,8 @@ export interface IPost {
   content: string;
   createdAt?: string;
   updatedAt?: string;
-  category? : string,
-  imageUrl : string
+  category?: string;
+  imageUrl: string;
 }
 
 @Entity({
@@ -32,10 +41,10 @@ export class Post {
 
   @ApiProperty()
   @Column({
-    name:'image_url',
-    nullable:true
+    name: 'image_url',
+    nullable: true,
   })
-  public imageUrl : string
+  public imageUrl: string;
 
   @CreateDateColumn({
     type: 'timestamp',
@@ -49,29 +58,27 @@ export class Post {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => User,(author:User) => author.posts)
-  public author : User;
+  @ManyToOne(() => User, (author: User) => author.posts)
+  public author: User;
 
   @ApiProperty({
-    type: () => Category
+    type: () => Category,
   })
-  @ManyToMany(() => Category,(category: Category) => category.posts)
+  @ManyToMany(() => Category, (category: Category) => category.posts)
   @JoinTable({
-    name:'posts_to_categories',
-    joinColumn:{
-      name:'post_id',
-      referencedColumnName:'id'
+    name: 'posts_to_categories',
+    joinColumn: {
+      name: 'post_id',
+      referencedColumnName: 'id',
     },
-    inverseJoinColumn:{
-      name:'category_id'
-    }
+    inverseJoinColumn: {
+      name: 'category_id',
+    },
   })
-  @Transform(({value}) => {
-    if(value!==null){
+  @Transform(({ value }) => {
+    if (value !== null) {
       return value;
     }
   })
-  public categories : Category[];
-
-
+  public categories: Category[];
 }

@@ -34,28 +34,28 @@ import { AppService } from './app.service';
     }),
     // Multer Module
     MulterModule.register({
-      dest:Path.IMAGE_STORAGE
+      dest: Path.IMAGE_STORAGE,
     }),
     // Server Static Module
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname,'../../../public')
+      rootPath: join(__dirname, '../../../public'),
     }),
     // Component modules
     PostsModule,
     DatabaseModule,
     UserModule,
     AuthenticationModule,
-    CategoriesModule
+    CategoriesModule,
   ],
   // Controller
   controllers: [AppController],
   // Providers injector
-  providers: [SeedingService,AppService],
+  providers: [SeedingService, AppService],
 })
 export class AppModule implements OnApplicationBootstrap {
   constructor(private readonly seedingService: SeedingService) {}
   async onApplicationBootstrap() {
     //await this.seedingService.seed();
-    console.log('[LOGCAT]',join(__dirname,'../../../public'));
+    console.log('[LOGCAT]', join(__dirname, '../../../public'));
   }
 }

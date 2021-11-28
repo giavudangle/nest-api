@@ -35,7 +35,7 @@ import { AuthenticationService } from './authentication.service';
 @ApiTags('Authentication API')
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
-  strategy:'exposeAll'
+  strategy: 'exposeAll',
 })
 @Controller('authentication')
 export class AuthenticationController {

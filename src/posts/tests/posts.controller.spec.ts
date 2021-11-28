@@ -13,9 +13,9 @@ describe('PostsController', () => {
       providers: [
         PostsService,
         {
-          provide:getRepositoryToken(Post),
-          useValue: {}
-        }
+          provide: getRepositoryToken(Post),
+          useValue: {},
+        },
       ],
     }).compile();
 

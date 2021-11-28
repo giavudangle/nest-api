@@ -12,8 +12,8 @@ describe('PostsService', () => {
         PostsService,
         {
           provide: getRepositoryToken(Post),
-          useValue:{}
-        }
+          useValue: {},
+        },
       ],
     }).compile();
 

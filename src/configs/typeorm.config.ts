@@ -4,7 +4,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 function getMigrationDirectory(configService: ConfigService) {
   const directory =
     configService.get('NODE_ENV') !== 'dev' ? 'src' : `${__dirname}`;
-  console.log(`${directory}/../migrations/**/*{.ts,.js}`)
+  console.log(`${directory}/../migrations/**/*{.ts,.js}`);
   return `${directory}/../migrations/**/*{.ts,.js}`;
 }
 export default class TypeOrmConfig {

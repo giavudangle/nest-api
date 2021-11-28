@@ -1,4 +1,9 @@
-import { HttpCode, HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpCode,
+  HttpException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
@@ -7,7 +12,6 @@ import { CreatePostDto } from '../dtos/create-post.dto';
 import { UpdatePostDto } from '../dtos/update-post.dto';
 
 import { Post } from '../entities/post.entity';
-
 
 @Injectable()
 export class PostsService {
@@ -20,21 +24,23 @@ export class PostsService {
    */
   constructor(
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
-    @InjectRepository(Category) private readonly categoriesRepository: Repository<Category>
-
+    @InjectRepository(Category)
+    private readonly categoriesRepository: Repository<Category>,
   ) {}
-  
 
-
-  async create(postDto: CreatePostDto,author : User,imageUrl : string): Promise<Post> {
-    const categoriesDto = JSON.parse(postDto.categories as any)
-    let categoriesArray = [] ;
+  async create(
+    postDto: CreatePostDto,
+    author: User,
+    imageUrl: string,
+  ): Promise<Post> {
+    const categoriesDto = JSON.parse(postDto.categories as any);
+    const categoriesArray = [];
 
     // Reading in sequence
-    for(const cate of categoriesDto){
-      let cat = this.categoriesRepository.create(cate)
-      let savedCat = await this.categoriesRepository.save(cat) 
-      categoriesArray.push(savedCat)
+    for (const cate of categoriesDto) {
+      const cat = this.categoriesRepository.create(cate);
+      const savedCat = await this.categoriesRepository.save(cat);
+      categoriesArray.push(savedCat);
     }
 
     // Reading in parallel
@@ -43,14 +49,12 @@ export class PostsService {
     //   const savedCate = await this.categoriesRepository.save(newCate)
     //   arr.push(savedCate)
     // }))
-  
 
-    
-    let newPost =  this.postsRepository.create({
+    const newPost = this.postsRepository.create({
       ...postDto,
       imageUrl,
       author,
-      categories:categoriesArray
+      categories: categoriesArray,
     });
 
     return await this.postsRepository.save(newPost);
@@ -58,20 +62,20 @@ export class PostsService {
 
   async findAll(): Promise<Post[]> {
     return await this.postsRepository.find({
-      relations:['author','categories']
+      relations: ['author', 'categories'],
     });
   }
 
   async findOne(id: number): Promise<Post> {
-    return await this.postsRepository.findOne(id,{
-      relations:['author','categories']
+    return await this.postsRepository.findOne(id, {
+      relations: ['author', 'categories'],
     });
   }
 
   async update(id: number, post: UpdatePostDto): Promise<Post> {
     await this.postsRepository.update(id, post);
-    const updatedPost = await this.postsRepository.findOne(id,{
-      relations:['author']
+    const updatedPost = await this.postsRepository.findOne(id, {
+      relations: ['author'],
     });
     if (updatedPost) {
       return updatedPost;
