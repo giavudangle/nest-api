@@ -15,6 +15,7 @@ import {
   Req,
   UploadedFile,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from '../dtos/create-post.dto';
@@ -29,6 +30,7 @@ import {
   ApiFoundResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { Post as PostEntity } from '../entities/post.entity';
@@ -44,7 +46,6 @@ import {
   editFileName,
   imageFileFilter,
 } from '../../shared/utils/file-uploading.utils';
-import { CategoriesService } from '../../categories/core/categories.service';
 
 @ApiTags('Posts API')
 //@UseInterceptors(ExcludeNullInterceptor)
@@ -94,13 +95,28 @@ export class PostsController {
   @ApiOkResponse({
     type: PostEntity,
   })
+  @ApiQuery({
+    name:'search',
+    type: String,
+    description:'Search term',
+    required:false
+  })
   @ApiNotFoundResponse()
-  async findAll(): Promise<PostEntity[]> {
-    const posts = await this.postsService.findAll();
-    if (!posts) {
-      throw new NotFoundException();
+  async findAll(@Query('search') search? : string): Promise<PostEntity[]> {
+    if(search){
+      try {
+        return await this.postsService.searchForPosts(search)
+      }
+      catch(e){
+        throw new NotFoundException();
+      }
+    } else {
+      try {
+        return await this.postsService.findAll();
+      } catch(e) {
+        throw new NotFoundException();
+      }
     }
-    return posts;
   }
 
   @Get(':id')
@@ -117,16 +133,32 @@ export class PostsController {
     return post;
   }
 
+
+  @UseGuards(JwtAuthenticationGuard)
+  @HttpCode(200)
+  @ApiCookieAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBadRequestResponse()
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './public/assets/images',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
   @Patch(':id')
   @ApiOkResponse({
     type: PostEntity,
   })
-  @ApiBadRequestResponse()
   async update(
+    @UploadedFile() file : Express.Multer.File,
     @Param('id', ParseIntPipe) id: number,
     @Body() newPostInformation: UpdatePostDto,
   ): Promise<PostEntity> {
-    const updatedPost = this.postsService.update(id, newPostInformation);
+    const filePath = file.path.toString();
+    const updatedPost = this.postsService.update(id, newPostInformation,filePath);
     if (!updatedPost) {
       throw new BadRequestException();
     }
@@ -134,13 +166,16 @@ export class PostsController {
   }
 
   @Delete(':id')
-  @ApiForbiddenResponse()
+  @ApiBadRequestResponse()
   @ApiOkResponse()
   async remove(@Param('id', ParseIntPipe) id: number): Promise<boolean> {
     const flag = await this.postsService.remove(id);
-    if (flag == null) {
-      throw new ForbiddenException();
+    if (flag === false) {
+      throw new BadRequestException();
     }
     return true;
   }
+
+
+
 }

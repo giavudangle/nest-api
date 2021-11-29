@@ -20,6 +20,6 @@ export class Category {
   })
   public code: string;
 
-  @ManyToMany(() => Post, (post: Post) => post.categories)
+  @ManyToMany(() => Post, (post: Post) => post.categories,{cascade:true})
   public posts: Post[];
 }

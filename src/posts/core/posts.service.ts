@@ -1,17 +1,19 @@
 import {
   HttpCode,
   HttpException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Category } from '../../categories/entities/category.entity';
 import { User } from '../../users/entities/user.entity';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { UpdatePostDto } from '../dtos/update-post.dto';
 
 import { Post } from '../entities/post.entity';
+import { PostsSearchService } from '../../search/services/post-search.service';
 
 @Injectable()
 export class PostsService {
@@ -23,6 +25,7 @@ export class PostsService {
    * @param {Repository<Post>} postsRepository
    */
   constructor(
+    @Inject(PostsSearchService) private readonly postsSearchService : PostsSearchService,
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
     @InjectRepository(Category)
     private readonly categoriesRepository: Repository<Category>,
@@ -56,8 +59,10 @@ export class PostsService {
       author,
       categories: categoriesArray,
     });
+    await this.postsRepository.save(newPost);
+    await this.postsSearchService.indexPost(newPost)
 
-    return await this.postsRepository.save(newPost);
+    return newPost;
   }
 
   async findAll(): Promise<Post[]> {
@@ -72,14 +77,19 @@ export class PostsService {
     });
   }
 
-  async update(id: number, post: UpdatePostDto): Promise<Post> {
-    await this.postsRepository.update(id, post);
-    const updatedPost = await this.postsRepository.findOne(id, {
-      relations: ['author'],
-    });
-    if (updatedPost) {
-      return updatedPost;
-    }
+  async update(id: number, post: UpdatePostDto,newImageUrl: string): Promise<Post> {
+    //const test = await this.postsRepository.update(id, {...post,imageUrl:newImageUrl});
+    console.log(Object.entries(post.categoriesIds as any))
+    console.log({...post,imageUrl:newImageUrl})
+    // const updatedPost = await this.postsRepository.findOne(id, {
+    //   relations: ['author'],
+    // });
+    // if (updatedPost) {
+    //   await this.postsSearchService.update(updatedPost)
+    //   return updatedPost;
+    // }
+
+
     return null;
   }
 
@@ -88,6 +98,21 @@ export class PostsService {
     if (!deleteResponse.affected) {
       return false;
     }
+    await this.postsSearchService.remove(id)
     return true;
   }
+
+  async searchForPosts(text:string) : Promise<Post[]> {
+    const results = await this.postsSearchService.search(text)
+    const ids = results.map(r => r.id)
+    if(!ids.length){
+      return [];
+    }
+    return this.postsRepository.find({
+      where:{
+        id: In(ids)
+      }
+    })
+  }
+
 }

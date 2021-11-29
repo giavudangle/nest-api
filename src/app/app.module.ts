@@ -56,6 +56,6 @@ export class AppModule implements OnApplicationBootstrap {
   constructor(private readonly seedingService: SeedingService) {}
   async onApplicationBootstrap() {
     //await this.seedingService.seed();
-    console.log('[LOGCAT]', join(__dirname, '../../../public'));
+    //console.log('[LOGCAT]', join(__dirname, '../../../public'));
   }
 }
