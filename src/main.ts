@@ -24,7 +24,7 @@ async function bootstrap() {
     .setTitle('Nest-TypeORM Api Documentation')
     .setDescription('Simple api built with nest-typeorm-postgresql')
     .setVersion('1.0.0')
-    .addCookieAuth('Authentication')
+    //.addCookieAuth('Authentication')
     .build();
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);

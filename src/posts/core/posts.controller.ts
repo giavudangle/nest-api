@@ -35,7 +35,7 @@ import {
 } from '@nestjs/swagger';
 import { Post as PostEntity } from '../entities/post.entity';
 import { LoggingInterceptor } from '../../shared/interceptors/logging.interceptor';
-import { JwtAuthenticationGuard } from '../../authentication/guards/jwt-authentication.guard';
+import { JwtAccessTokenAuthenticationGuard } from '../../authentication/guards/jwt-access-token-authentication.guard';
 import IRequestWithUser from '../../authentication/interfaces/request-with-user.interface';
 import { PostNotFoundException } from '../exceptions/post-not-found.exception';
 import { ExcludeNullInterceptor } from '../../shared/interceptors/exclude-null.interceptor';
@@ -54,7 +54,7 @@ import {
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(JwtAccessTokenAuthenticationGuard)
   @Post()
   @ApiCreatedResponse({
     type: PostEntity,
@@ -90,7 +90,7 @@ export class PostsController {
     return post;
   }
 
-  @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(JwtAccessTokenAuthenticationGuard)
   @Get()
   @ApiOkResponse({
     type: PostEntity,
@@ -132,7 +132,7 @@ export class PostsController {
     return post;
   }
 
-  @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(JwtAccessTokenAuthenticationGuard)
   @HttpCode(200)
   @ApiCookieAuth()
   @ApiConsumes('multipart/form-data')

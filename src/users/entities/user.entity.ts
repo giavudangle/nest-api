@@ -50,4 +50,10 @@ export class User implements IUser {
   @ApiProperty({ type: () => Post })
   @OneToMany(() => Post, (post: Post) => post.author)
   public posts?: Post[];
+
+  @Exclude()
+  @Column({
+    nullable:true
+  })
+  public currentHashedRefreshToken?:string
 }
