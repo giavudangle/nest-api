@@ -31,8 +31,8 @@ export class CreatePostDto {
 
   @IsNotEmpty()
   @ApiProperty({
-    type: () => Category,
+    type: () => Number,
     //isArray:true
   })
-  categories: Category[];
+  categoriesIds: number[];
 }

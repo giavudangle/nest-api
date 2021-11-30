@@ -64,7 +64,11 @@ export class Post {
   @ApiProperty({
     type: () => Category,
   })
-  @ManyToMany(() => Category, (category: Category) => category.posts)
+  @ManyToMany(() => Category, (category: Category) => category.posts, {
+    cascade: true,
+    eager: false,
+    lazy: true,
+  })
   @JoinTable({
     name: 'posts_to_categories',
     joinColumn: {
@@ -73,6 +77,7 @@ export class Post {
     },
     inverseJoinColumn: {
       name: 'category_id',
+      referencedColumnName: 'id',
     },
   })
   @Transform(({ value }) => {

@@ -96,24 +96,23 @@ export class PostsController {
     type: PostEntity,
   })
   @ApiQuery({
-    name:'search',
+    name: 'search',
     type: String,
-    description:'Search term',
-    required:false
+    description: 'Search term',
+    required: false,
   })
   @ApiNotFoundResponse()
-  async findAll(@Query('search') search? : string): Promise<PostEntity[]> {
-    if(search){
+  async findAll(@Query('search') search?: string): Promise<PostEntity[]> {
+    if (search) {
       try {
-        return await this.postsService.searchForPosts(search)
-      }
-      catch(e){
+        return await this.postsService.searchForPosts(search);
+      } catch (e) {
         throw new NotFoundException();
       }
     } else {
       try {
         return await this.postsService.findAll();
-      } catch(e) {
+      } catch (e) {
         throw new NotFoundException();
       }
     }
@@ -132,7 +131,6 @@ export class PostsController {
     }
     return post;
   }
-
 
   @UseGuards(JwtAuthenticationGuard)
   @HttpCode(200)
@@ -153,12 +151,16 @@ export class PostsController {
     type: PostEntity,
   })
   async update(
-    @UploadedFile() file : Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
     @Param('id', ParseIntPipe) id: number,
     @Body() newPostInformation: UpdatePostDto,
   ): Promise<PostEntity> {
     const filePath = file.path.toString();
-    const updatedPost = this.postsService.update(id, newPostInformation,filePath);
+    const updatedPost = this.postsService.update(
+      id,
+      newPostInformation,
+      filePath,
+    );
     if (!updatedPost) {
       throw new BadRequestException();
     }
@@ -175,7 +177,4 @@ export class PostsController {
     }
     return true;
   }
-
-
-
 }

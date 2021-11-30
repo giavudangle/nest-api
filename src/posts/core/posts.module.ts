@@ -11,11 +11,8 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SearchModule } from '../../search/core/search.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Post, Category]),
-    SearchModule
-  ],
+  imports: [TypeOrmModule.forFeature([Post, Category]), SearchModule],
   controllers: [PostsController],
-  providers: [PostsService, CategoriesService,PostsSearchService],
+  providers: [PostsService, CategoriesService, PostsSearchService],
 })
 export class PostsModule {}

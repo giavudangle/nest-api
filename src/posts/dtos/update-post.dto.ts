@@ -14,8 +14,7 @@ import { CreatePostDto } from './create-post.dto';
 export class UpdatePostDto extends PartialType(CreatePostDto) {
   @IsNumber()
   @IsOptional()
-  id : number
-
+  id: number;
 
   @ApiProperty()
   @MaxLength(50)
@@ -36,11 +35,12 @@ export class UpdatePostDto extends PartialType(CreatePostDto) {
   })
   image: any;
 
+  imageUrl: string;
+
   @IsNotEmpty()
   @ApiProperty({
-    type: Number,
-    isArray:true
+    type: () => Category,
+    //isArray:true
   })
-  
-  categoriesIds: Number
+  categories: Category[];
 }
