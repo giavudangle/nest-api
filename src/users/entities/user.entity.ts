@@ -8,6 +8,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { LocalFile } from '../../local-files/core/local-file.entity';
 import { Post } from '../../posts/entities/post.entity';
 import { Address } from './address.entity';
 
@@ -31,6 +32,22 @@ export class User implements IUser {
   @ApiProperty()
   @Column()
   public name: string;
+
+  @Column({nullable:true})
+  @ApiPropertyOptional()
+  public phoneNumber?: string;
+  
+  @JoinColumn({name:'avatar_id'})
+  @OneToOne(
+    () => LocalFile,
+    {
+      nullable:true
+    }
+  )
+  public avatar?:LocalFile
+
+  @Column({ nullable: true,name:'avatar_id' })
+  public avatarId?: number;
 
   @ApiProperty()
   @Exclude()

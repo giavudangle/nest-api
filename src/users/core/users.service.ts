@@ -1,13 +1,20 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { HttpException, HttpStatus, Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { InjectConnection, InjectRepository } from '@nestjs/typeorm';
+import { Connection, Repository } from 'typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt'
+import { ILocalFileDto } from '../../local-files/dtos/local-file.dto';
+import { LocalFile } from '../../local-files/core/local-file.entity';
+import { LocalFilesService } from '../../local-files/core/local-file.service';
+import { PublicFileService } from '../../public-files/core/public-file.service';
 @Injectable()
 export class UserService {
   constructor(
+    @Inject(LocalFilesService) private readonly localFilesService: LocalFilesService,
+    @Inject(PublicFileService) private readonly publicFilesService: PublicFileService,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectConnection() private readonly connection : Connection
   ) { }
 
   async getByEmail(email: string): Promise<User> {
@@ -60,4 +67,40 @@ export class UserService {
       currentHashedRefreshToken:null
     })
   }
+
+  async addAvatar(userId: number, fileData: ILocalFileDto) {
+    const avatar = await this.localFilesService.saveLocalFileData(fileData)
+    await this.userRepository.update(userId, {
+      avatarId: avatar.id
+    })
+  }
+
+  // Delete avatar
+  // -> Get avatar path 
+  // -> Delete avatar blog saved from database
+  // -> Also delete in static (public/assets/images)
+  // -> Update avatar id to null
+  async deleteAvatar(userId:number) {
+    const queryRunner = this.connection.createQueryRunner()
+    const user = await this.getById(userId)
+    const fileId = user.avatar?.id 
+    if(fileId){
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+      try {
+        await queryRunner.manager.update(User,userId,{
+          ...user,
+          avatar:null
+        })
+        await this.publicFilesService.deletePublicFile(fileId)
+        await queryRunner.commitTransaction();
+      } catch(error){
+        await queryRunner.rollbackTransaction();
+        throw new InternalServerErrorException();
+      } finally {
+        await queryRunner.release();
+      }
+    }
+  }
+
 }
