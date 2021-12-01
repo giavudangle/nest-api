@@ -28,11 +28,11 @@ export class CreatePostDto {
     format: 'binary',
   })
   image: any;
-
+  
   @IsNotEmpty()
   @ApiProperty({
-    type: () => Number,
+    type: () => Category,
     //isArray:true
   })
-  categoriesIds: number[];
+  categories: Category[];
 }

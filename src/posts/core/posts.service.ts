@@ -38,15 +38,13 @@ export class PostsService {
     author: User,
     imageUrl: string,
   ): Promise<Post> {
-    const categoriesDto = JSON.parse(postDto.categoriesIds as any);
-    const categoriesArray = [];
-
+    //#region Cached
     // Reading in sequence
-    for (const cate of categoriesDto) {
-      const cat = this.categoriesRepository.create(cate);
-      const savedCat = await this.categoriesRepository.save(cat);
-      categoriesArray.push(savedCat);
-    }
+    // for (const cate of categoriesDto) {
+    //   const cat = this.categoriesRepository.create(cate);
+    //   const savedCat = await this.categoriesRepository.save(cat);
+    //   categoriesArray.push(savedCat);
+    // }
 
     // Reading in parallel
     // await Promise.all(categoriesDto.map(async cate => {
@@ -54,17 +52,26 @@ export class PostsService {
     //   const savedCate = await this.categoriesRepository.save(newCate)
     //   arr.push(savedCate)
     // }))
+    //#endregion
+    const cateIds = JSON.parse(postDto.categories as any).map(
+      (item : Category) => item.id
+    )
 
-    const newPost = this.postsRepository.create({
-      ...postDto,
-      imageUrl,
-      author,
-      categories: categoriesArray,
-    });
-    await this.postsRepository.save(newPost);
-    await this.postsSearchService.indexPost(newPost);
-
-    return newPost;
+    try {
+      const fetchCates = await this.categoriesRepository.findByIds(cateIds)
+      const newPost = this.postsRepository.create({
+        ...postDto,
+        imageUrl,
+        author,
+        categories: fetchCates,
+      })
+      await this.postsRepository.save(newPost);
+      await this.postsSearchService.indexPost(newPost);
+      return newPost;
+      ;
+    }catch(e){
+      throw new HttpException('Soemthing went wrong', HttpStatus.BAD_REQUEST);
+    }
   }
 
   async findAll(): Promise<Post[]> {
@@ -89,19 +96,18 @@ export class PostsService {
     );
     try {
       const cates = await this.categoriesRepository.findByIds(cateIds);
-      const getPost = await this.postsRepository.findOne(id);
-      getPost.title = post.title;
-      getPost.content = post.content;
-      getPost.imageUrl = imageUrl;
-      getPost.categories = cates;
-      await this.postsRepository.save(getPost);
+      const updatePost = await this.postsRepository.findOne(id);
+      updatePost.title = post.title;
+      updatePost.content = post.content;
+      updatePost.imageUrl = imageUrl;
+      updatePost.categories = cates;
+      await this.postsRepository.save(updatePost);
       const updatedPost = await this.postsRepository.findOne(id, {
         relations: ['categories', 'author'],
       });
       await this.postsSearchService.update(updatedPost);
       return updatedPost;
     } catch (e) {
-      console.log(e);
       throw new HttpException('Soemthing went wrong', HttpStatus.BAD_REQUEST);
     }
   }

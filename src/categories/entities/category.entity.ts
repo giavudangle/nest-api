@@ -16,7 +16,7 @@ export class Category {
 
   @ApiProperty()
   @Column({
-    //unique:true,
+    unique:true,
     nullable: true,
   })
   public code: string;

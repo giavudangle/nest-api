@@ -77,6 +77,7 @@ export class PostsController {
     @Body() createPostDto: CreatePostDto,
     @Req() req: IRequestWithUser,
   ): Promise<PostEntity> {
+    console.log(file)
     const filePath = file.path.toString();
 
     const post = await this.postsService.create(

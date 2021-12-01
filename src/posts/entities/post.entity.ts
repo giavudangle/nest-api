@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -27,6 +28,7 @@ export interface IPost {
   name: 'posts',
 })
 export class Post {
+  @Index('post_id_index')
   @ApiProperty()
   @PrimaryGeneratedColumn()
   public id: number;
@@ -58,6 +60,7 @@ export class Post {
   })
   updatedAt: Date;
 
+  @Index('post_authorId_index')
   @ManyToOne(() => User, (author: User) => author.posts)
   public author: User;
 

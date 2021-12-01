@@ -1,13 +1,14 @@
+import { Request } from 'express';
 import { extname } from 'path';
 
-export const imageFileFilter = (req, file, callback) => {
+export const imageFileFilter = (req : Request, file : any, callback : Function) => {
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
     return callback(new Error('Only image files are allowed!'), false);
   }
   callback(null, true);
 };
 
-export const editFileName = (req, file, callback) => {
+export const editFileName = (req : Request, file : any, callback : Function) => {
   const name = file.originalname.split('.')[0];
   const fileExtName = extname(file.originalname);
   const randomName = Array(4)
