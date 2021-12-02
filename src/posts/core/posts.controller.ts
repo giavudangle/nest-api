@@ -46,6 +46,8 @@ import {
   editFileName,
   imageFileFilter,
 } from '../../shared/utils/file-uploading.utils';
+import { PaginationParams } from '../../shared/types/pagination-params-type';
+import { number } from '@hapi/joi';
 
 @ApiTags('Posts API')
 //@UseInterceptors(ExcludeNullInterceptor)
@@ -92,6 +94,7 @@ export class PostsController {
   }
 
   @UseGuards(JwtAccessTokenAuthenticationGuard)
+  @ApiNotFoundResponse()
   @Get()
   @ApiOkResponse({
     type: PostEntity,
@@ -102,17 +105,34 @@ export class PostsController {
     description: 'Search term',
     required: false,
   })
-  @ApiNotFoundResponse()
-  async findAll(@Query('search') search?: string): Promise<PostEntity[]> {
+  @ApiQuery({
+    name:'offset',
+    type: String,
+    description:'Search offset',
+    required:false
+  })
+  @ApiQuery({
+    name:'limit',
+    type: String,
+    description:'Search limit',
+    required:false
+  })
+
+  async findAll(
+    @Query('search') search?: string,
+    @Query('offset',ParseIntPipe) offset? : number,
+    @Query('limit',ParseIntPipe) limit? : number,
+    ) {
+    console.log(offset,limit)
     if (search) {
       try {
-        return await this.postsService.searchForPosts(search);
+        return await this.postsService.searchForPosts(search,offset,limit);
       } catch (e) {
         throw new NotFoundException();
       }
     } else {
       try {
-        return await this.postsService.findAll();
+        return await this.postsService.findAll(offset,limit)
       } catch (e) {
         throw new NotFoundException();
       }

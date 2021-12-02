@@ -74,10 +74,19 @@ export class PostsService {
     }
   }
 
-  async findAll(): Promise<Post[]> {
-    return await this.postsRepository.find({
-      relations: ['author', 'categories'],
+  async findAll(offset?:number,limit?:number) {
+    const [item,count] = await this.postsRepository.findAndCount({
+      relations:['author','categories'],
+      order:{
+        id:'ASC'
+      },
+      skip:offset,
+      take:limit
     });
+    return {
+      item,
+      count
+    }
   }
 
   async findOne(id: number): Promise<Post> {
@@ -121,9 +130,10 @@ export class PostsService {
     return true;
   }
 
-  async searchForPosts(text: string): Promise<Post[]> {
-    const results = await this.postsSearchService.search(text);
-    const ids = results.map((r) => r.id);
+  async searchForPosts(text: string,offset?:number,limit?:number) {
+    
+    const results = await this.postsSearchService.search(text,offset,limit);
+    const ids = (results as any).map(r => r.id) ;
     if (!ids.length) {
       return [];
     }
